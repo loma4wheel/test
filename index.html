@@ -259,35 +259,56 @@
       document.getElementById('formCompra').addEventListener('submit', finalizarCompra);
     }
 
-    // ========================================================
-    // CONSULTA REMOTA HTTP (DESCARGA DE INVENTARIO DESDE GOOGLE)
+        // ========================================================
+    // CONSULTA REMOTA HTTP CON DIAGNÓSTICO EN VIVO
     // ========================================================
     function conectarYObtenerCatalogo() {
-      fetch(URL_BACKEND_GOOGLE + "?action=obtenerProductos")
+      // Forzamos la limpieza de la URL por si quedó un espacio en blanco por accidente
+      const urlLimpia = URL_BACKEND_GOOGLE.trim();
+
+      fetch(urlLimpia)
         .then(response => {
-          if (!response.ok) throw new Error("Fallo en la respuesta del servidor");
+          if (!response.ok) {
+            throw new Error("El servidor de Google respondió con un error código: " + response.status);
+          }
           return response.json();
         })
         .then(data => {
+          // CONTROL DE SEGURIDAD: Verificamos si Google devolvió una lista o un mensaje de error interno
+          if (data.error || (data.exito === false)) {
+            alert("❌ Alerta de Google Sheets:\n" + (data.mensaje || "Error desconocido en el formato de la hoja."));
+            return;
+          }
+          
+          if (!Array.isArray(data) || data.length === 0) {
+            alert("⚠️ Catálogo vacío: Google respondió bien, pero la pestaña 'Productos' no tiene artículos con 'SI' en la columna Activo (I).");
+          }
+
           productos = data;
           productosFiltrados = productos;
           crearFiltrosDeCategoriasDinamicos();
           renderizarCatalogoEstiloAmazon();
         })
         .catch(error => {
-          console.error("Error crítico de sincronización:", error);
+          console.error("Error crítico detectado por el navegador:", error);
+          
+          // Lanzamos una alerta interactiva en pantalla para saber qué candado está fallando
+          alert("🚨 Falla de Conexión en GitHub Pages:\n" + error.message + 
+                "\n\nEsto sucede habitualmente si la URL de tu variable no coincide exactamente con tu último despliegue web.");
+
           const grid = document.getElementById('productosGrid');
           if (grid) {
             grid.innerHTML = `
               <div style="grid-column: 1/-1; text-align: center; color: #b12704; padding: 40px 10px;">
                 <i class="fa-solid fa-triangle-exclamation" style="font-size:35px; margin-bottom:10px;"></i>
                 <p style="font-weight:bold; font-size:16px;">No se pudo sincronizar el inventario de prendas.</p>
-                <p style="font-size:13px; color:#555; margin-top:5px;">Verifica la URL /exec de tu despliegue o la pestaña 'Productos' en Sheets.</p>
+                <p style="font-size:13px; color:#555; margin-top:5px;">Detalle técnico: ${error.message}</p>
               </div>
             `;
           }
         });
     }
+
 
     // Auxiliar universal de conversión de moneda (RD$)
     function formatearNumero(num) {

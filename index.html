@@ -1152,35 +1152,77 @@ async function confirmarPedido() {
 
   toast("⏳ Procesando tu pedido...");
 
+  // ==============================
+  // GUARDAR EN GOOGLE SHEETS
+  // ==============================
+
+  let pedidoID = "";
+
   try {
-  await fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({
-    action: "pedido",
-    cliente: nombre,
-    telefono: tel,
-    items: carrito.map(c => ({
-      id: c.id,
-      nombre: c.nombre,
-      precio: c.precio,
-      cantidad: c.qty
-    }))
-  })
-});
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "pedido",
+        cliente: nombre,
+        telefono: tel,
+        items: carrito.map(c => ({
+          id: c.id,
+          nombre: c.nombre,
+          precio: c.precio,
+          cantidad: c.qty
+        }))
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      pedidoID = data.pedidoID;
+    }
+
   } catch (e) {
     console.warn("No se pudo guardar en Sheets:", e);
   }
 
-  const total = carrito.reduce((a, c) => a + c.precio * c.qty, 0);
+  // ==============================
+  // CALCULAR TOTAL
+  // ==============================
+
+  const total = carrito.reduce(
+    (a, c) => a + c.precio * c.qty,
+    0
+  );
+
   const sym = getSimbolo();
 
-  let msg = ` *Nuevo Pedido*\n\n *Cliente:* ${nombre}\n *Teléfono:* ${tel}\n\n*Productos:*\n`;
+  // ==============================
+  // MENSAJE WHATSAPP
+  // ==============================
+
+  let msg =
+`🛍️ *Nuevo Pedido*
+
+📦 *Pedido:* ${pedidoID}
+
+👤 *Cliente:* ${nombre}
+📱 *Teléfono:* ${tel}
+
+🛒 *Productos:*
+`;
 
   carrito.forEach(c => {
     msg += `• ${c.nombre} x${c.qty} — ${sym}${(c.precio * c.qty).toFixed(2)}\n`;
   });
 
-  msg += `\n *Total: ${sym}${total.toFixed(2)}*\n\n_Pedido realizado desde Grey´s Colletion Shop_`;
+  msg +=
+`\n💰 *Total: ${sym}${total.toFixed(2)}*
+
+_Pedido realizado desde Grey's Collection Shop_`;
+
+  // ==============================
+  // URL WHATSAPP
+  // ==============================
 
   const whatsappURL =
     "https://wa.me/" +
@@ -1188,7 +1230,19 @@ async function confirmarPedido() {
     "?text=" +
     encodeURIComponent(msg);
 
-  // 🔒 limpiar carrito SOLO UNA VEZ (sin locks)
+  // ==============================
+  // GUARDAR ÚLTIMO PEDIDO
+  // ==============================
+
+  localStorage.setItem(
+    "ultimoPedido",
+    pedidoID
+  );
+
+  // ==============================
+  // LIMPIAR CARRITO
+  // ==============================
+
   carrito = [];
   saveCarrito();
   renderCarrito();
@@ -1206,17 +1260,25 @@ async function confirmarPedido() {
 
   toast("📲 Abriendo WhatsApp...");
 
-  // 👉 detección simple y estable
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // ==============================
+  // DETECTAR DISPOSITIVO
+  // ==============================
+
+  const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    );
 
   setTimeout(() => {
 
     if (isMobile) {
-      // ✔ móvil: abre app o chat directo
       window.location.href = whatsappURL;
     } else {
-      // ✔ PC: una sola pestaña
-      window.open(whatsappURL, "_blank", "noopener,noreferrer");
+      window.open(
+        whatsappURL,
+        "_blank",
+        "noopener,noreferrer"
+      );
     }
 
   }, 150);

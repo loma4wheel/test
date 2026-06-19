@@ -539,7 +539,7 @@ button{cursor:pointer;border:none;font-family:var(--font-body)}
 <body>
 
 <header id="topbar">
-  <div id="logo">Grey´s Colletion</div>
+  <div id="logo">Tienda En Linea</div>
   <div id="search-wrap">
     <span id="search-icon">🔍</span>
     <input id="search-input" type="search" placeholder="Buscar productos…" autocomplete="off"/>
@@ -551,7 +551,7 @@ button{cursor:pointer;border:none;font-family:var(--font-body)}
 
 <section id="hero">
   <h1>Moda<br/>Femenina</h1>
-  <p>Los mejores productos con envío rápido y atención personalizada por WhatsApp</p>
+  <p>Carganado Productos...</p>
 </section>
 
 <nav id="cats-wrap">
@@ -1352,5 +1352,51 @@ function toast(msg) {
 
   
 </script>
+
+  <!-- ── PIE DE PÁGINA (Pega esto justo antes de la etiqueta </body>) ── -->
+<footer style="background:var(--bg2); border-top:1px solid var(--border); padding:48px 24px 32px; margin-top:64px; font-family:var(--font-body);">
+  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:32px;">
+    
+    <!-- Columna Información de Tienda -->
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="font-family:var(--font-head); font-size:1.45rem; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap;">
+        Grey´s Colletion
+      </div>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.6;">Las mejores prendas con envío rápido y atención personalizada por WhatsApp.</p>
+    </div>
+
+    <!-- Columna Contacto y Dirección -->
+    <div>
+      <h3 style="font-family:var(--font-head); font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:16px; position:relative;">Contacto</h3>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.6; margin-bottom:8px;"><strong>Teléfono:</strong> <a href="tel:+573000000000" style="color:var(--text); text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">829-749-8748</a></p>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.6; margin-bottom:8px;"><strong>Dirección:</strong> Loma de Cabrera, Dajabón </p>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.6; margin-bottom:8px;"><strong>Horario:</strong> Siempre Abierto - 24/7 </p>
+    </div>
+
+    <!-- Columna Cuentas Bancarias -->
+    <div>
+      <h3 style="font-family:var(--font-head); font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:16px; position:relative;">Cuentas Bancarias</h3>
+      
+      <!-- Cuenta 1 -->
+      <div style="background:var(--bg3); border:1px solid var(--border); padding:12px; border-radius:var(--radius-sm); margin-bottom:10px;">
+        <div style="color:var(--accent2); font-weight:600; font-size:.85rem; text-transform:uppercase; margin-bottom:4px;">Banreservas (Cuenta de Ahorros)</div>
+        <p style="font-family:monospace; color:var(--text); font-size:.85rem; margin:0;">Nº: 9600178420 </p>
+        <p style="font-family:monospace; color:var(--text); font-size:.85rem; margin:0;">Titular: Greissy Dominguez </p>
+        <p style="font-family:monospace; color:var(--text); font-size:.85rem; margin:0;">Cédula: 402-2336369-4 </p>
+      </div>
+
+     
+    </div>
+
+  </div>
+
+  <!-- Derechos reservados -->
+  <div style="max-width:1200px; margin:40px auto 0; padding-top:20px; border-top:1px solid var(--border); text-align:center; color:var(--muted); font-size:.8rem;">
+    <p>&copy; 2026 Grey´s Colletion. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+
+  
 </body>
 </html>
